@@ -93,6 +93,7 @@ module Runtime
     include("runtime/safe-load.jl")
 end # module Runtime
 import .Runtime: Mem
+import .Runtime: Adaptor
 
 const ci_cache = GPUCompiler.CodeCache()
 Base.Experimental.@MethodTable(method_table)
@@ -120,13 +121,13 @@ module Device
     include(joinpath("device", "quirks.jl"))
 end
 import .Device: malloc, signal_exception, report_exception, report_oom, report_exception_frame
-import .Device: ROCDeviceArray, AS, HostCall, hostcall!
+import .Device: ROCDeviceArray, ROCDeviceVector, ROCDeviceMatrix, ROCBoundsError, AS, HostCall, hostcall!
 import .Device: workitemIdx, workgroupIdx, workgroupDim, gridItemDim, gridGroupDim
 import .Device: threadIdx, blockIdx, blockDim
 import .Device: sync_workgroup
 import .Device: @rocprint, @rocprintln, @rocprintf
 
-export ROCDeviceArray
+export ROCDeviceArray, ROCDeviceVector, ROCDeviceMatrix, ROCBoundsError
 export @rocprint, @rocprintln, @rocprintf
 export workitemIdx, workgroupIdx, workgroupDim, gridItemDim, gridGroupDim
 export sync_workgroup
@@ -187,7 +188,7 @@ end
 # Load ROCm external libraries
 if functional(:hip)
     functional(:rocblas) && include(joinpath(@__DIR__, "blas", "rocBLAS.jl"))
-    #functional(:rocsparse)  && include("sparse/rocSPARSE.jl")
+    functional(:rocsparse)  && include("sparse/rocSPARSE.jl")
     #functional(:rocsolver)   && include("solver/rocSOLVER.jl")
     #functional(:rocalution) && include("solver/rocALUTION.jl")
     if functional(:rocrand)
