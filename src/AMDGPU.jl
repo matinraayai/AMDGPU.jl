@@ -18,6 +18,9 @@ export ROCDevice, ROCQueue, ROCExecutable, ROCKernel, ROCSignal
 export has_rocm_gpu
 
 export ROCArray, ROCVector, ROCMatrix, ROCVecOrMat
+export DenseROCArray, DenseROCVector, DenseROCMatrix, DenseROCVecOrMat,
+       StridedROCArray, StridedROCVector, StridedROCMatrix, StridedROCVecOrMat,
+       AnyROCArray, AnyROCVector, AnyROCMatrix, AnyROCVecOrMat
 export roc
 
 struct LockedObject{T}
@@ -121,13 +124,13 @@ module Device
     include(joinpath("device", "quirks.jl"))
 end
 import .Device: malloc, signal_exception, report_exception, report_oom, report_exception_frame
-import .Device: ROCDeviceArray, ROCDeviceVector, ROCDeviceMatrix, ROCBoundsError, AS, HostCall, hostcall!
+import .Device: ROCDeviceArray, ROCDeviceVector, ROCDeviceMatrix, AS, HostCall, hostcall!
 import .Device: workitemIdx, workgroupIdx, workgroupDim, gridItemDim, gridGroupDim
 import .Device: threadIdx, blockIdx, blockDim
 import .Device: sync_workgroup
 import .Device: @rocprint, @rocprintln, @rocprintf
 
-export ROCDeviceArray, ROCDeviceVector, ROCDeviceMatrix, ROCBoundsError
+export ROCDeviceArray, ROCDeviceVector, ROCDeviceMatrix
 export @rocprint, @rocprintln, @rocprintf
 export workitemIdx, workgroupIdx, workgroupDim, gridItemDim, gridGroupDim
 export sync_workgroup
