@@ -109,6 +109,13 @@ push!(tests, "rocFFT" => ()->begin
         @test_skip "rocFFT"
     end
 end)
+push!(tests, "rocSPARSE" => ()->begin
+    if AMDGPU.functional(:rocsparse)
+        include("rocsparse/rocsparse.jl")
+    else
+        @test_skip "rocSPARSE"
+    end
+end)
 push!(tests, "NMF" => ()->begin
     if AMDGPU.functional(:rocblas)
         include("rocarray/nmf.jl")
