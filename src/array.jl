@@ -246,13 +246,19 @@ function Base.copy(X::ROCArray{T}) where T
     Xnew
 end
 
-function Base.unsafe_wrap(::Type{<:ROCArray}, ptr::Ptr{T}, dims::NTuple{N,<:Integer}; device=default_device(), lock::Bool=true) where {T,N}
+function Base.unsafe_wrap(::Type{<:ROCArray}, ptr::Ptr{T}, dims::NTuple{N,<:Integer}; own=false, device=default_device()) where {T,N}
     @assert isbitstype(T) "Cannot wrap a non-bitstype pointer as a ROCArray"
     sz = prod(dims) * sizeof(T)
-    device_ptr = lock ? Mem.lock(ptr, sz, device) : ptr
-    buf = Mem.Buffer(device_ptr, ptr, device_ptr, sz, device, false, false)
+    @assert Mem.pointerinfo(ptr).type != HSA.LibHSARuntime.HSA_EXT_POINTER_TYPE_UNKNOWN
+    buf = Mem.Buffer(ptr, C_NULL, ptr, sz, device, false, false)
     return ROCArray{T, N}(buf, dims; own=false)
 end
+
+function Base.unsafe_wrap(AType::Type{<:ROCArray}, ptr::Ptr{T}, dim::Int; own=false, 
+                          device=default_device()) where {T,N}
+    unsafe_wrap(AType, ptr, Dims(dims); own, device)
+end
+
 Base.unsafe_wrap(::Type{ROCArray{T}}, ptr::Ptr, dims; kwargs...) where T =
     unsafe_wrap(ROCArray, Base.unsafe_convert(Ptr{T}, ptr), dims; kwargs...)
 
