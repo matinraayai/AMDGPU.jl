@@ -105,14 +105,12 @@ end
 has_exception(e::ROCExecutable) = haskey(e.globals, :__global_exception_flag)
 
 function get_exception(
-    exe::ROCExecutable; check_exceptions::Bool = true, signal_handle::UInt64,
+    exe::ROCExecutable, state::AMDGPU.KernelState; check_exceptions::Bool = true, signal_handle::UInt64,
 )
     has_exception(exe) || return nothing
 
     # Check if any wavefront for this kernel threw an exception
-    ex_flag = get_global(exe, :__global_exception_flag)
-    ex_flag_ptr = Base.unsafe_convert(Ptr{Int64}, ex_flag)
-    ex_flag_value = Base.unsafe_load(ex_flag_ptr)
+    ex_flag_value = Base.unsafe_load(state.exception_flag_ptr)
     ex_flag_value == 0 && return nothing
 
     ex_string = nothing
