@@ -84,10 +84,10 @@ function cleanup!(
     # Free KernelState buffers
     Mem.free(Mem.Buffer(reinterpret(Ptr{Cvoid},
                                     kersig.kernel.state.exception_flag_ptr),
-                        kersig.queue.device, sizeof(Ptr{Cvoid})))
+                        kersig.queue.device, sizeof(Ptr{Cvoid}); coherent=true))
     Mem.free(Mem.Buffer(reinterpret(Ptr{Cvoid},
                                     kersig.kernel.state.exception_dropped_ptr),
-                        kersig.queue.device, sizeof(Ptr{Cvoid})))
+                        kersig.queue.device, sizeof(Ptr{Cvoid}); coherent=true))
 
     isnothing(kersig.exception) || throw(kersig.exception)
     nothing

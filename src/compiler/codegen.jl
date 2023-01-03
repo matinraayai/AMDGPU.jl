@@ -165,11 +165,11 @@ function rocfunction(f::F, tt::Type=Tuple{}; name=nothing, device=AMDGPU.default
     function allocate_kernel_state(device)
         exception_flag_ptr = reinterpret(LLVMPtr{Int64,1},
                                          Base.unsafe_convert(Ptr{Cvoid},
-                                                             Mem.alloc(device, sizeof(Ptr{Cvoid}))))
+                                                             Mem.alloc(device, sizeof(Ptr{Cvoid}); coherent=true)))
         unsafe_store!(exception_flag_ptr, 0)
         exception_dropped_ptr = reinterpret(LLVMPtr{Int64,1},
                                             Base.unsafe_convert(Ptr{Cvoid},
-                                                                Mem.alloc(device, sizeof(Ptr{Cvoid}))))
+                                                                Mem.alloc(device, sizeof(Ptr{Cvoid}); coherent=true)))
         unsafe_store!(exception_dropped_ptr, 0)
         return AMDGPU.KernelState(exception_flag_ptr, exception_dropped_ptr)
     end
