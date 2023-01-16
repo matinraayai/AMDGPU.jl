@@ -254,7 +254,7 @@ function Base.unsafe_wrap(::Type{<:ROCArray}, ptr::Ptr{T}, dims::NTuple{N,<:Inte
     return ROCArray{T, N}(buf, dims; own=false)
 end
 
-function Base.unsafe_wrap(AType::Type{<:ROCArray}, ptr::Ptr{T}, dim::Int; own=false, 
+function Base.unsafe_wrap(AType::Type{<:ROCArray}, ptr::Ptr{T}, dims::Int; own=false, 
                           device=default_device()) where {T,N}
     unsafe_wrap(AType, ptr, Dims(dims); own, device)
 end
