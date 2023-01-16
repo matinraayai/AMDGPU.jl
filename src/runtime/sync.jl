@@ -2,10 +2,10 @@ import ..AMDGPU: hip_configured
 
 "Tracks HSA signals and HIP streams to sync against."
 struct SyncState
-    signals::Vector{ROCKernelSignal}
-    streams::Vector{Ptr{Cvoid}}
+    signals::Set{ROCKernelSignal}
+    streams::Set{Ptr{Cvoid}}
 end
-SyncState() = SyncState(ROCKernelSignal[], Ptr{Cvoid}[])
+SyncState() = SyncState(Set{ROCKernelSignal}(), Set{Ptr{Cvoid}}())
 
 struct WaitAdaptor end
 struct MarkAdaptor{S}
