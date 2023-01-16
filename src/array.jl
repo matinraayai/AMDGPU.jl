@@ -130,7 +130,7 @@ const StridedROCVecOrMat{T} = Union{StridedROCVector{T}, StridedROCMatrix{T}}
 
 Base.pointer(x::StridedROCArray{T}) where {T} = Base.unsafe_convert(Ptr{T}, x)
 @inline function Base.pointer(x::StridedROCArray{T}, i::Integer) where T
-    Base.unsafe_convert(LLVMPtr{T}, x) + Base._memory_offset(x, i)
+    Base.unsafe_convert(Ptr{T}, x) + Base._memory_offset(x, i)
 end
 
 
