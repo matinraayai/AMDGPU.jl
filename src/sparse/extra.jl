@@ -28,7 +28,6 @@ for (fname, elty) in ((:rocsparse_scsrgeam, :Float32),
                                   descrB, nnz(B), B.rowPtr, B.colVal,
                                   descrC, rowPtrC, nnzcount_C)
             mark!((A, B, rowPtrC), stream)
-            # sleep(1)
 
             nnz_C = ROCArray{$elty}(undef, nnzcount_C[])
             colValC = ROCArray{Int32}(undef, nnzcount_C[])

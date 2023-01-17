@@ -87,6 +87,18 @@ function unsafe_free!(xs::ROCArray)
     return
 end
 
+## alias detection
+
+Base.dataids(A::ROCArray) = (UInt(pointer(A)),)
+
+Base.unaliascopy(A::ROCArray) = copy(A)
+
+function Base.mightalias(A::ROCArray, B::ROCArray)
+  rA = pointer(A):pointer(A)+sizeof(A)
+  rB = pointer(B):pointer(B)+sizeof(B)
+  return first(rA) <= first(rB) < last(rA) || first(rB) <= first(rA) < last(rB)
+end
+
 const DenseROCArray{T,N} = ROCArray{T,N}
 const DenseROCVector{T} = DenseROCArray{T,1}
 const DenseROCMatrix{T} = DenseROCArray{T,2}
