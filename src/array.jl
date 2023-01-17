@@ -126,6 +126,14 @@ Return the device associated with the array `A`.
 """
 device(A::ROCArray) = A.buf.device
 
+
+"""
+    device(A::WrappedArray{T,N,ROCArray,ROCArray{T,N}}) -> ROCDevice
+
+Return the device associated with the any WrappedArray `A` backed by a `ROCArray`.
+"""
+device(A::WrappedArray{T,N,ROCArray,ROCArray{T,N}}) where {T, N} = device(parent(A))
+
 ## aliases
 
 const ROCVector{T} = ROCArray{T,1}
