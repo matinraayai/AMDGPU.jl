@@ -196,6 +196,10 @@ end
 
 include("random.jl")
 
+# KernelAbstractions
+include("ROCKernels.jl")
+export ROCBackend
+
 function __init__()
     atexit() do
         Runtime.RT_EXITING[] = true
