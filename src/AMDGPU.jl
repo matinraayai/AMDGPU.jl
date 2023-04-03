@@ -197,9 +197,11 @@ end
 include("random.jl")
 
 # KernelAbstractions
-include("ROCKernels.jl")
-import .ROCKernels: ROCBackend
-export ROCBackend
+@static if !isdefined(Base, :get_extension)
+    include("../ext/ROCKernels.jl")
+    import .ROCKernels: ROCBackend
+    export ROCBackend
+end
 
 function __init__()
     atexit() do
